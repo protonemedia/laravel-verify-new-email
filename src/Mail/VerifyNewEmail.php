@@ -7,30 +7,39 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
+use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class VerifyNewEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public $token;
+    /**
+     * @var \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     */
+    public $pendingUserEmail;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(string $token)
+    public function __construct(PendingUserEmail $pendingUserEmail)
     {
-        $this->token = $token;
+        $this->pendingUserEmail = $pendingUserEmail;
     }
 
-    public function verificationUrl()
+    /**
+     * Creates a temporary signed URL to verify the pending email.
+     *
+     * @return string
+     */
+    public function verificationUrl():string
     {
         return URL::temporarySignedRoute(
-            'pendingEmail.verify',
+            config('verify-new-email.route')?: 'pendingEmail.verify',
             now()->addMinutes(config('auth.verification.expire', 60)),
             [
-                'token' => $this->token,
+                'token' => $this->pendingUserEmail->token,
             ]
         );
     }

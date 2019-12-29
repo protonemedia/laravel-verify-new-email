@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use ProtoneMedia\LaravelVerifyNewEmail\Http\VerificationController;
+use ProtoneMedia\LaravelVerifyNewEmail\Http\VerifyNewEmailController;
 
-Route::get('pendingEmail/verify/{token}', VerificationController::class)->middleware('signed')->name('pendingEmail.verify');
+Route::get('pendingEmail/verify/{token}', [VerifyNewEmailController::class, 'verify'])
+    ->middleware('signed')
+    ->name('pendingEmail.verify');

@@ -14,11 +14,11 @@ class TestCase extends OrchestraTestCase
         ];
     }
 
-    protected function user()
+    protected function user($email = 'old@example.com')
     {
         return User::create([
             'name'     => 'Demo User',
-            'email'    => 'old@example.com',
+            'email'    => $email,
             'password' => 'secret',
         ]);
     }
@@ -37,10 +37,10 @@ class TestCase extends OrchestraTestCase
         ]);
 
         include_once __DIR__ . '/create_users_table.php.stub';
-        include_once __DIR__ . '/../database/migrations/create_pending_email_addresses_table.php.stub';
+        include_once __DIR__ . '/../database/migrations/create_pending_user_emails_table.php.stub';
 
         (new \CreateUsersTable)->up();
-        (new \CreatePendingEmailAddressesTable)->up();
+        (new \CreatePendingUserEmailsTable)->up();
 
         User::unguard();
         $this->app['config']->set('auth.providers.users.model', User::class);

@@ -2,40 +2,54 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail;
 
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 
 trait MustVerifyNewEmail
 {
-    public function newEmail($email):PendingEmailAddress
+    /**
+     * Deletes all previous attempts for this user, creates a new model/token
+     * to verify the given email address and send the verification URL
+     * to the new email address.
+     *
+     * @param string $email
+     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     */
+    public function newEmail(string $email):PendingUserEmail
     {
-        PendingEmailAddress::forUser($this)->get()->each->delete();
+        PendingUserEmail::forUser($this)->get()->each->delete();
 
-        $token = Password::broker()->getRepository()->createNewToken();
-
-        $pendingEmailAddress = PendingEmailAddress::create([
+        return tap(PendingUserEmail::create([
             'user_type' => get_class($this),
             'user_id'   => $this->getKey(),
             'email'     => $email,
-            'token'     => Hash::make($token),
-        ]);
-
-        $this->sendPendingEmailVerificationMail($email, $token);
-
-        return $pendingEmailAddress;
+            'token'     => Password::broker()->getRepository()->createNewToken(),
+        ]), function ($pendingUserEmail) {
+            $this->sendPendingUserEmailVerificationMail($pendingUserEmail);
+        });
     }
 
-    public function sendPendingEmailVerificationMail($newEmail, $token)
+    /**
+     * Sends the VerifyNewEmail Mailable to the new email address.
+     *
+     * @param \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail $pendingUserEmail
+     * @return mixed
+     */
+    public function sendPendingUserEmailVerificationMail(PendingUserEmail $pendingUserEmail)
     {
-        Mail::to($newEmail)->send(new VerifyNewEmail($token));
+        return Mail::to($pendingUserEmail->email)->send(new VerifyNewEmail($pendingUserEmail));
     }
 
-    public function resendPendingEmailVerificationMail():PendingEmailAddress
+    /**
+     * Grabs the pending user email address, generates a new token and sends the Mailable.
+     *
+     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     */
+    public function resendPendingUserEmailVerificationMail():PendingUserEmail
     {
-        $pendingEmailAddress = PendingEmailAddress::forUser($this)->firstOrFail();
+        $pendingUserEmail = PendingUserEmail::forUser($this)->firstOrFail();
 
-        return $this->newEmail($pendingEmailAddress->email);
+        return $this->newEmail($pendingUserEmail->email);
     }
 }

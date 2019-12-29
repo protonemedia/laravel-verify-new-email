@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePendingEmailAddressesTable extends Migration
+class CreatePendingUserEmailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePendingEmailAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pending_email_addresses', function (Blueprint $table) {
+        Schema::create('pending_user_emails', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->morphs('user');
             $table->string('email')->index();
@@ -29,6 +29,6 @@ class CreatePendingEmailAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pending_email_addresses');
+        Schema::dropIfExists('pending_user_emails');
     }
 }

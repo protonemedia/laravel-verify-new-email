@@ -2,40 +2,28 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\RedirectsUsers;
-use Illuminate\Http\Request;
+use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 trait VerifiesPendingEmails
 {
     use RedirectsUsers;
 
     /**
-     * Mark the authenticated user's email address as verified.
+     * Mark the authenticated user's new email address as verified.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  string $token
      *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws \ProtoneMedia\LaravelVerifyNewEmail\Http\InvalidVerificationLinkException
      */
-    public function verify(Request $request)
+    public function verify(string $token)
     {
-        if (! hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
-            throw new AuthorizationException;
-        }
-
-        if (! hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
-            throw new AuthorizationException;
-        }
-
-        if ($request->user()->hasVerifiedEmail()) {
-            return redirect($this->redirectPath());
-        }
-
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
+        PendingUserEmail::whereToken($token)->firstOr(['*'], function () {
+            throw new InvalidVerificationLinkException(
+                __('The verification link is not valid anymore.')
+            );
+        })->activate();
 
         return redirect($this->redirectPath())->with('verified', true);
     }

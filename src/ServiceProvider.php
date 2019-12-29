@@ -11,12 +11,12 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'verify-new-email');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+
+        if (!config('verify-new-email.route')) {
+            $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        }
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
