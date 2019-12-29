@@ -11,7 +11,7 @@ trait VerifiesPendingEmails
     use RedirectsUsers;
 
     /**
-     * Mark the authenticated user's new email address as verified.
+     * Mark the user's new email address as verified.
      *
      * @param  string $token
      *
