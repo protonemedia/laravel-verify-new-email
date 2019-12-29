@@ -1,0 +1,50 @@
+{
+    "name": "protonemedia/laravel-verify-new-email",
+    "description": "Package to handle email address updates and verification",
+    "keywords": [
+        "protonemedia",
+        "laravel-verify-new-email"
+    ],
+    "homepage": "https://github.com/protonemedia/laravel-verify-new-email",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Pascal Baljet",
+            "email": "pascal@protone.media",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "illuminate/support": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "4.0.*",
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ProtoneMedia\\LaravelVerifyNewEmail\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ProtoneMedia\\LaravelVerifyNewEmail\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ProtoneMedia\\LaravelVerifyNewEmail\\ServiceProvider"
+            ]
+        }
+    }
+}
