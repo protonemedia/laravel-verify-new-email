@@ -42,6 +42,16 @@ class User extends Authenticatable
 }
 ```
 
+Now your `User` model has three new methods:
+
+``` php
+// generates a token and sends a verification mail to 'me@newcompany.com'.
+$user->newEmail('me@newcompany.com');
+
+// resends the verification mail for 'me@newcompany.com'.
+$user->resendPendingUserEmailVerificationMail();
+```
+
 ### Testing
 
 ``` bash
