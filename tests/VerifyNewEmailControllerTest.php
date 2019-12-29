@@ -25,6 +25,7 @@ class VerifyNewEmailControllerTest extends TestCase
         $this->assertEquals('new@example.com', $user->email);
         $this->assertNotNull($user->email_verified_at);
         $this->assertNull($pendingUserEmail->fresh());
+        $this->assertNull($user->getPendingEmail());
     }
 
     /** @test */

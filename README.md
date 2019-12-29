@@ -51,36 +51,43 @@ Now your `User` model has a few new methods:
 // generates a token and sends a verification mail to 'me@newcompany.com'.
 $user->newEmail('me@newcompany.com');
 
+// returns the currently pending email address that needs to be verified.
+$user->getPendingEmail();
+
 // resends the verification mail for 'me@newcompany.com'.
-$user->resendPendingUserEmailVerificationMail();
+$user->resendPendingEmailVerificationMail();
+
+// deletes the pending email address
+$user->clearPendingEmail();
 ```
 
 The `newEmail` method doesn't update the user, its current email address stays current until the new one if verified. It stores a token (associated to the user and new email address) in the `pending_user_emails` table. Once the user verifies the email address by clicking the link in the mail, the user model will be updated and the token will be removed from the `pending_user_emails` table.
 
-The `resendPendingUserEmailVerificationMail` does exactly the same, it just grabs the new email address from the previous attempt.
+The `resendPendingEmailVerificationMail` does exactly the same, it just grabs the new email address from the previous attempt.
 
 ### Customization
 
 You can change the content of the verification mail by editing the published view:
 `resources/views/vendor/verify-new-email/emails/verifyNewEmail.blade.php`
 
-You can also override the `sendPendingUserEmailVerificationMail` method to change the behaviour of sending the verification mail:
+You can also override the `sendPendingEmailVerificationMail` method to change the behaviour of sending the verification mail:
 
 ``` php
 <?php
 
 namespace App;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use ProtoneMedia\LaravelVerifyNewEmail\MustVerifyNewEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use MustVerifyNewEmail, Notifiable;
 
-    public function sendPendingUserEmailVerificationMail(PendingUserEmail $pendingUserEmail)
+    public function sendPendingEmailVerificationMail(PendingUserEmail $pendingUserEmail)
     {
         // send the mail...
     }

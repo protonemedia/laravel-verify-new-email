@@ -18,7 +18,7 @@ trait MustVerifyNewEmail
      */
     public function newEmail(string $email):?PendingUserEmail
     {
-        PendingUserEmail::forUser($this)->get()->each->delete();
+        $this->clearPendingEmail();
 
         if ($this->email === $email) {
             return null;
@@ -30,8 +30,28 @@ trait MustVerifyNewEmail
             'email'     => $email,
             'token'     => Password::broker()->getRepository()->createNewToken(),
         ]), function ($pendingUserEmail) {
-            $this->sendPendingUserEmailVerificationMail($pendingUserEmail);
+            $this->sendPendingEmailVerificationMail($pendingUserEmail);
         });
+    }
+
+    /**
+     * Returns the pending email address.
+     *
+     * @return string|null
+     */
+    public function getPendingEmail():?string
+    {
+        return PendingUserEmail::forUser($this)->value('email');
+    }
+
+    /**
+     * Deletes the pending email address models for this user.
+     *
+     * @return void
+     */
+    public function clearPendingEmail()
+    {
+        PendingUserEmail::forUser($this)->get()->each->delete();
     }
 
     /**
@@ -40,7 +60,7 @@ trait MustVerifyNewEmail
      * @param \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail $pendingUserEmail
      * @return mixed
      */
-    public function sendPendingUserEmailVerificationMail(PendingUserEmail $pendingUserEmail)
+    public function sendPendingEmailVerificationMail(PendingUserEmail $pendingUserEmail)
     {
         return Mail::to($pendingUserEmail->email)->send(new VerifyNewEmail($pendingUserEmail));
     }
@@ -50,7 +70,7 @@ trait MustVerifyNewEmail
      *
      * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail|null
      */
-    public function resendPendingUserEmailVerificationMail():?PendingUserEmail
+    public function resendPendingEmailVerificationMail():?PendingUserEmail
     {
         $pendingUserEmail = PendingUserEmail::forUser($this)->firstOrFail();
 

@@ -49,6 +49,6 @@ class PendingUserEmail extends Model
             $user->save();
         });
 
-        static::whereEmail($user->email)->get()->each->delete();
+        static::whereEmail($this->email)->get()->each->delete();
     }
 }
