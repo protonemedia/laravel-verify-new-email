@@ -14,11 +14,15 @@ trait MustVerifyNewEmail
      * to the new email address.
      *
      * @param string $email
-     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail|null
      */
-    public function newEmail(string $email):PendingUserEmail
+    public function newEmail(string $email):?PendingUserEmail
     {
         PendingUserEmail::forUser($this)->get()->each->delete();
+
+        if ($this->email === $email) {
+            return null;
+        }
 
         return tap(PendingUserEmail::create([
             'user_type' => get_class($this),
@@ -44,9 +48,9 @@ trait MustVerifyNewEmail
     /**
      * Grabs the pending user email address, generates a new token and sends the Mailable.
      *
-     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail|null
      */
-    public function resendPendingUserEmailVerificationMail():PendingUserEmail
+    public function resendPendingUserEmailVerificationMail():?PendingUserEmail
     {
         $pendingUserEmail = PendingUserEmail::forUser($this)->firstOrFail();
 
