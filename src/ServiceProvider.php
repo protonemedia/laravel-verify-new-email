@@ -1,6 +1,6 @@
 <?php
 
-namespace Protonemedia\LaravelVerifyNewEmail;
+namespace ProtoneMedia\LaravelVerifyNewEmail;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
