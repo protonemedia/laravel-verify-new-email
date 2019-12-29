@@ -42,7 +42,7 @@ class User extends Authenticatable
 }
 ```
 
-Now your `User` model has three new methods:
+Now your `User` model has a few new methods:
 
 ``` php
 // generates a token and sends a verification mail to 'me@newcompany.com'.
@@ -51,6 +51,10 @@ $user->newEmail('me@newcompany.com');
 // resends the verification mail for 'me@newcompany.com'.
 $user->resendPendingUserEmailVerificationMail();
 ```
+
+The `newEmail` method doesn't update the user, its current email address stays current until the new one if verified. It stores a token (associated to the user and new email address) in the `pending_user_emails` table. Once the user verifies the email address by clicking the link in the mail, the user will be updated and the token will be removed from the `pending_user_emails` table.
+
+The `resendPendingUserEmailVerificationMail` does exactly the same but it grabs the new email address from the previous attempt.
 
 ### Testing
 
