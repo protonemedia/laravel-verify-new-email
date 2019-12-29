@@ -1,10 +1,8 @@
 <?php
 
-/*
- * You can place your custom package configuration in here.
- */
 return [
-
+    /**
+     * Here you can specify the name of your custom route.
+     */
     'route' => null,
-
 ];

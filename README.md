@@ -1,11 +1,11 @@
 # [WIP] Laravel Verify New Email
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/protonemedia/laravel-user-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-user-email)
-[![Build Status](https://img.shields.io/travis/protonemedia/laravel-user-email/master.svg?style=flat-square)](https://travis-ci.org/protonemedia/laravel-user-email)
-[![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-user-email.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-user-email)
-[![Total Downloads](https://img.shields.io/packagist/dt/protonemedia/laravel-user-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-user-email)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
+[![Build Status](https://img.shields.io/travis/pascalbaljetmedia/laravel-verify-new-email/master.svg?style=flat-square)](https://travis-ci.org/pascalbaljetmedia/laravel-verify-new-email)
+[![Quality Score](https://img.shields.io/scrutinizer/g/pascalbaljetmedia/laravel-verify-new-email.svg?style=flat-square)](https://scrutinizer-ci.com/g/pascalbaljetmedia/laravel-verify-new-email)
+[![Total Downloads](https://img.shields.io/packagist/dt/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+Laravel supports verifying email addresses out of the box. This package adds support for verifying new email addresses, for example when a user decides to update his email address. Requires Laravel 6.0 and PHP 7.2 or higher.
 
 ## Installation
 
@@ -15,10 +15,31 @@ You can install the package via composer:
 composer require protonemedia/laravel-verify-new-email
 ```
 
+## Configuration
+
+Publish the database migration, config file and email view:
+
+```bash
+php artisan vendor:publish --provider="ProtoneMedia\LaravelVerifyNewEmail\ServiceProvider"
+```
+
 ## Usage
 
+Add the `MustVerifyNewEmail` trait to your `User` model:
+
 ``` php
-// Usage description here
+<?php
+
+namespace App;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use ProtoneMedia\LaravelVerifyNewEmail\MustVerifyNewEmail;
+
+class User extends Authenticatable
+{
+    use MustVerifyNewEmail, Notifiable;
+}
 ```
 
 ### Testing
