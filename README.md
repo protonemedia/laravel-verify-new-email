@@ -56,6 +56,33 @@ The `newEmail` method doesn't update the user, its current email address stays c
 
 The `resendPendingUserEmailVerificationMail` does exactly the same but it grabs the new email address from the previous attempt.
 
+### Customization
+
+You can change the content of the verification mail by editing the published view:
+`resources/views/vendor/verify-new-email/emails/verifyNewEmail.blade.php`
+
+You can also override the `sendPendingUserEmailVerificationMail` method to change the behaviour of sending the verification mail:
+
+``` php
+<?php
+
+namespace App;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use ProtoneMedia\LaravelVerifyNewEmail\MustVerifyNewEmail;
+
+class User extends Authenticatable
+{
+    use MustVerifyNewEmail, Notifiable;
+
+    public function sendPendingUserEmailVerificationMail(PendingUserEmail $pendingUserEmail)
+    {
+        // send the mail...
+    }
+}
+```
+
 ### Testing
 
 ``` bash
