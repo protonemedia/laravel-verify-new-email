@@ -68,7 +68,7 @@ The `resendPendingEmailVerificationMail` does exactly the same, it just grabs th
 ### Customization
 
 You can change the content of the verification mail by editing the published view:
-`resources/views/vendor/verify-new-email/emails/verifyNewEmail.blade.php`
+`resources/views/vendor/verify-new-email/verifyNewEmail.blade.php`
 
 You can also override the `sendPendingEmailVerificationMail` method to change the behaviour of sending the verification mail:
 
