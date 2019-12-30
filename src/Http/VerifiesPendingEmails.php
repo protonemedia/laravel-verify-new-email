@@ -2,14 +2,11 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
-use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Support\Facades\Auth;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 trait VerifiesPendingEmails
 {
-    use RedirectsUsers;
-
     /**
      * Mark the user's new email address as verified.
      *
@@ -29,6 +26,6 @@ trait VerifiesPendingEmails
             Auth::guard()->login($user);
         }
 
-        return redirect($this->redirectPath())->with('verified', true);
+        return redirect(config('verify-new-email.redirect_to'))->with('verified', true);
     }
 }

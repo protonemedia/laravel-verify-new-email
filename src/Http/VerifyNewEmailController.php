@@ -19,13 +19,6 @@ class VerifyNewEmailController extends Controller
     use VerifiesPendingEmails;
 
     /**
-     * Where to redirect users after verification.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/home';
-
-    /**
      * Create a new controller instance.
      *
      * @return void

@@ -2,9 +2,14 @@
 
 return [
     /**
-     * Here you can specify the name of a custom route to redirect to after verification.
+     * Here you can specify the name of a custom route to handle the verification.
      */
     'route' => null,
+
+    /**
+     * Here you can specify the path to redirect to after verification.
+     */
+    'redirect_to' => '/home',
 
     /**
      * Wether to login the user after successfully verifying its email.

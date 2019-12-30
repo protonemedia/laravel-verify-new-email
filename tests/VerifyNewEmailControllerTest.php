@@ -3,6 +3,7 @@
 namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
 use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use ProtoneMedia\LaravelVerifyNewEmail\Http\InvalidVerificationLinkException;
@@ -28,7 +29,10 @@ class VerifyNewEmailControllerTest extends TestCase
 
         $pendingUserEmail = $user->newEmail('new@example.com');
 
-        app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+        $redirect = app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+
+        $this->assertInstanceOf(RedirectResponse::class, $redirect);
+        $this->assertEquals('http://localhost/home', $redirect->getTargetUrl());
 
         $user = $user->fresh();
 
