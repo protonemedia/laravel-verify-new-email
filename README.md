@@ -23,7 +23,7 @@ Publish the database migration, config file and email view:
 php artisan vendor:publish --provider="ProtoneMedia\LaravelVerifyNewEmail\ServiceProvider"
 ```
 
-You can set the redirect path in the `verify-new-email.php` config file.
+You can set the redirect path in the `verify-new-email.php` config file. The user will be redirected to this path after verification.
 
 The expire time of the verification URLs can be changed by updating the `auth.verification.expire` setting and defaults to 60 minutes.
 
