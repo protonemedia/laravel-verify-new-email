@@ -2,7 +2,9 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail;
 
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 
 class PendingUserEmail extends Model
 {
@@ -49,6 +51,22 @@ class PendingUserEmail extends Model
             $user->markEmailAsVerified();
 
             static::whereEmail($this->email)->get()->each->delete();
+
+            event(new Verified($user));
         });
+    }
+
+    /**
+     * Creates a temporary signed URL to verify the pending email.
+     *
+     * @return string
+     */
+    public function verificationUrl(): string
+    {
+        return URL::temporarySignedRoute(
+            config('verify-new-email.route') ?: 'pendingEmail.verify',
+            now()->addMinutes(config('auth.verification.expire', 60)),
+            ['token' => $this->token]
+        );
     }
 }

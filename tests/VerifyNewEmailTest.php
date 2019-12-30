@@ -17,7 +17,7 @@ class VerifyNewEmailTest extends TestCase
 
         $this->assertNotEmpty($mailable->render());
 
-        $url = $mailable->verificationUrl();
+        $url = $mailable->build()->viewData['url'];
 
         $this->assertTrue(Str::startsWith($url, 'http://localhost/pendingEmail/verify/random_token?expires='));
 

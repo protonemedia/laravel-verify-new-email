@@ -2,6 +2,8 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use ProtoneMedia\LaravelVerifyNewEmail\Http\InvalidVerificationLinkException;
 use ProtoneMedia\LaravelVerifyNewEmail\Http\VerifyNewEmailController;
@@ -19,6 +21,7 @@ class VerifyNewEmailControllerTest extends TestCase
     /** @test */
     public function it_updates_the_user_email_and_deletes_the_pending_email()
     {
+        Event::fake();
         Mail::fake();
 
         $user = $this->user();
@@ -33,6 +36,10 @@ class VerifyNewEmailControllerTest extends TestCase
         $this->assertNotNull($user->email_verified_at);
         $this->assertNull($pendingUserEmail->fresh());
         $this->assertNull($user->getPendingEmail());
+
+        Event::assertDispatched(Verified::class, function ($event) use ($user) {
+            return $event->user->is($user);
+        });
     }
 
     /** @test */
