@@ -34,7 +34,7 @@ class VerifyFirstEmail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->markdown('verify-new-email::verifyNewEmail', [
+        return $this->markdown('verify-new-email::verifyFirstEmail', [
             'url' => $this->pendingUserEmail->verificationUrl(),
         ]);
     }
