@@ -45,8 +45,8 @@ class PendingUserEmail extends Model
     {
         return tap($this->user, function ($user) {
             $user->email = $this->email;
-            $user->email_verified_at = now();
             $user->save();
+            $user->markEmailAsVerified();
 
             static::whereEmail($this->email)->get()->each->delete();
         });
