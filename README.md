@@ -29,7 +29,7 @@ The expire time of the verification URLs can be changed by updating the `auth.ve
 
 ## Usage
 
-Add the `MustVerifyNewEmail` trait to your `User` model and make sure it implements the `MustVerifyEmail` interface as well.
+Add the `MustVerifyNewEmail` trait to your `User` model and make sure it implements the framework's `MustVerifyEmail` interface as well.
 
 ``` php
 <?php
@@ -98,7 +98,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
 ### Customization
 
-You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its email address for the first time (after registering). Alternatively you set your own custom Mailables in the config file:
+You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its initial email address for the first time (after registering). Alternatively you set your own custom Mailables classes in the config file:
 
 ``` php
 <?php
