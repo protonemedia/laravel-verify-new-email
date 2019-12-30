@@ -43,12 +43,12 @@ class PendingUserEmail extends Model
      */
     public function activate()
     {
-        $user = tap($this->user, function ($user) {
+        return tap($this->user, function ($user) {
             $user->email = $this->email;
             $user->email_verified_at = now();
             $user->save();
-        });
 
-        static::whereEmail($this->email)->get()->each->delete();
+            static::whereEmail($this->email)->get()->each->delete();
+        });
     }
 }

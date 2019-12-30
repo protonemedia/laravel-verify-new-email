@@ -9,6 +9,13 @@ use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class VerifyNewEmailControllerTest extends TestCase
 {
+    public function setUp():void
+    {
+        parent::setUp();
+
+        config(['verify-new-email.login_after_verification' => false]);
+    }
+
     /** @test */
     public function it_updates_the_user_email_and_deletes_the_pending_email()
     {
@@ -26,6 +33,22 @@ class VerifyNewEmailControllerTest extends TestCase
         $this->assertNotNull($user->email_verified_at);
         $this->assertNull($pendingUserEmail->fresh());
         $this->assertNull($user->getPendingEmail());
+    }
+
+    /** @test */
+    public function it_can_login_the_user()
+    {
+        Mail::fake();
+
+        $user = $this->user();
+
+        $pendingUserEmail = $user->newEmail('new@example.com');
+
+        config(['verify-new-email.login_after_verification' => true]);
+
+        app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+
+        $this->assertAuthenticatedAs($user);
     }
 
     /** @test */

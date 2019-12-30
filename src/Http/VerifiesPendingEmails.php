@@ -2,8 +2,8 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\RedirectsUsers;
+use Illuminate\Support\Facades\Auth;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 trait VerifiesPendingEmails
@@ -19,11 +19,15 @@ trait VerifiesPendingEmails
      */
     public function verify(string $token)
     {
-        PendingUserEmail::whereToken($token)->firstOr(['*'], function () {
+        $user = PendingUserEmail::whereToken($token)->firstOr(['*'], function () {
             throw new InvalidVerificationLinkException(
                 __('The verification link is not valid anymore.')
             );
         })->activate();
+
+        if (config('verify-new-email.login_after_verification')) {
+            Auth::guard()->login($user);
+        }
 
         return redirect($this->redirectPath())->with('verified', true);
     }
