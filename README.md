@@ -65,6 +65,35 @@ The `newEmail` method doesn't update the user, its current email address stays c
 
 The `resendPendingEmailVerificationMail` does exactly the same, it just grabs the new email address from the previous attempt.
 
+### Login after verification
+
+The user that verified its email address will be logged in automatically. You can disable this by chaning the `login_after_verification` configuration setting to `false`.
+
+### Overriding the default Laravel Email Verification
+
+The default [Laravel implementation](https://laravel.com/docs/master/verification) requires the user to be logged in before it can verify its email address. If you want to use this package's logic to handle that first verification flow as well, override the `sendEmailVerificationNotification` method as shown below.
+
+``` php
+<?php
+
+namespace App;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use ProtoneMedia\LaravelVerifyNewEmail\MustVerifyNewEmail;
+
+class User extends Authenticatable implements MustVerifyEmail
+{
+    use MustVerifyNewEmail, Notifiable;
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->newEmail($this->getEmailForVerification());
+    }
+}
+```
+
 ### Customization
 
 You can change the content of the verification mail by editing the published view:

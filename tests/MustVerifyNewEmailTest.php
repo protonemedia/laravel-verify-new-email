@@ -10,11 +10,14 @@ use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 class MustVerifyNewEmailTest extends TestCase
 {
     /** @test */
-    public function it_doesnt_send_a_verification_mail_if_the_email_didnt_change():void
+    public function it_doesnt_send_a_verification_mail_if_the_email_didnt_change()
     {
         Mail::fake();
 
         $user = $this->user();
+
+        $user->email_verified_at = now();
+        $user->save();
 
         $this->assertNull($user->newEmail($user->email));
 
@@ -22,7 +25,7 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
-    public function it_can_generate_a_token_and_mail_it_to_the_new_email_address():void
+    public function it_can_generate_a_token_and_mail_it_to_the_new_email_address()
     {
         Mail::fake();
 
@@ -54,7 +57,7 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
-    public function it_can_regenerate_a_token_and_mail_it():void
+    public function it_can_regenerate_a_token_and_mail_it()
     {
         Mail::fake();
 
@@ -86,7 +89,7 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
-    public function it_deletes_previous_attempts_of_the_user_trying_to_verify_a_new_email():void
+    public function it_deletes_previous_attempts_of_the_user_trying_to_verify_a_new_email()
     {
         Mail::fake();
 

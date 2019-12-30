@@ -9,7 +9,7 @@ use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 class VerifyNewEmailTest extends TestCase
 {
     /** @test */
-    public function it_can_generate_a_signed_url():void
+    public function it_can_generate_a_signed_url()
     {
         $mailable = new VerifyNewEmail(
             new PendingUserEmail(['token' => 'random_token'])

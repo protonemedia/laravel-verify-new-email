@@ -20,7 +20,7 @@ trait MustVerifyNewEmail
     {
         $this->clearPendingEmail();
 
-        if ($this->email === $email) {
+        if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
             return null;
         }
 
