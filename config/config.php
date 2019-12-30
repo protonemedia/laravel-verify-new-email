@@ -2,7 +2,7 @@
 
 return [
     /**
-     * Here you can specify the name of your custom route.
+     * Here you can specify the name of a custom route to redirect to after verification.
      */
     'route' => null,
 
