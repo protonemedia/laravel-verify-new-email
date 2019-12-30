@@ -4,6 +4,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
+use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
@@ -25,6 +26,31 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
+    public function it_uses_another_mailable_for_updating_an_email_address()
+    {
+        Mail::fake();
+
+        $user = $this->user();
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        $pendingUserEmail = $user->newEmail('new@example.com');
+
+        Mail::assertQueued(VerifyNewEmail::class, function (Mailable $mailable) use ($pendingUserEmail) {
+            $this->assertTrue($mailable->pendingUserEmail->is($pendingUserEmail));
+
+            $this->assertTrue($mailable->hasTo('new@example.com'));
+
+            $this->assertFalse($mailable->hasTo('old@example.com'));
+            $this->assertFalse($mailable->hasCc('old@example.com'));
+            $this->assertFalse($mailable->hasBcc('old@example.com'));
+
+            return true;
+        });
+    }
+
+    /** @test */
     public function it_can_generate_a_token_and_mail_it_to_the_new_email_address()
     {
         Mail::fake();
@@ -41,7 +67,7 @@ class MustVerifyNewEmailTest extends TestCase
             'email'     => 'new@example.com',
         ]);
 
-        Mail::assertQueued(VerifyNewEmail::class, function (Mailable $mailable) use ($pendingUserEmail) {
+        Mail::assertQueued(VerifyFirstEmail::class, function (Mailable $mailable) use ($pendingUserEmail) {
             $this->assertTrue($mailable->pendingUserEmail->is($pendingUserEmail));
 
             $this->assertTrue($mailable->hasTo('new@example.com'));
@@ -77,7 +103,7 @@ class MustVerifyNewEmailTest extends TestCase
         // verify it generated a new token
         $this->assertNotEquals($pendingUserEmailFirst->token, $pendingUserEmailSecond->token);
 
-        Mail::assertQueued(VerifyNewEmail::class, function (Mailable $mailable) {
+        Mail::assertQueued(VerifyFirstEmail::class, function (Mailable $mailable) {
             $this->assertTrue($mailable->hasTo('new@example.com'));
 
             $this->assertFalse($mailable->hasTo('old@example.com'));

@@ -62,7 +62,15 @@ trait MustVerifyNewEmail
      */
     public function sendPendingEmailVerificationMail(PendingUserEmail $pendingUserEmail)
     {
-        return Mail::to($pendingUserEmail->email)->send(new VerifyNewEmail($pendingUserEmail));
+        $mailableClass = config('verify-new-email.mailable_for_first_verification');
+
+        if ($pendingUserEmail->User->hasVerifiedEmail()) {
+            $mailableClass = config('verify-new-email.mailable_for_new_email');
+        }
+
+        $mailable = new $mailableClass($pendingUserEmail);
+
+        return Mail::to($pendingUserEmail->email)->send($mailable);
     }
 
     /**
