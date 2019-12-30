@@ -1,4 +1,4 @@
-# [WIP] Laravel Verify New Email
+# Laravel Verify New Email
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
 [![Build Status](https://img.shields.io/travis/pascalbaljetmedia/laravel-verify-new-email/master.svg?style=flat-square)](https://travis-ci.org/pascalbaljetmedia/laravel-verify-new-email)
