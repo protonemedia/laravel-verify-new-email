@@ -14,6 +14,11 @@ class PendingUserEmail extends Model
     const UPDATED_AT = null;
 
     /**
+     * @var array
+     */
+    protected $guarded = [];
+
+    /**
      * User relationship
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
