@@ -9,4 +9,6 @@ use ProtoneMedia\LaravelVerifyNewEmail\MustVerifyNewEmail;
 class User extends Authenticatable
 {
     use MustVerifyNewEmail, Notifiable;
+
+    protected $guarded = [];
 }

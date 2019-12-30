@@ -42,7 +42,6 @@ class TestCase extends OrchestraTestCase
         (new \CreateUsersTable)->up();
         (new \CreatePendingUserEmailsTable)->up();
 
-        User::unguard();
         $this->app['config']->set('auth.providers.users.model', User::class);
     }
 }
