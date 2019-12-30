@@ -96,7 +96,19 @@ class User extends Authenticatable implements MustVerifyEmail
 
 ### Customization
 
-You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its email address for the first time (after registering). Alternatively you set your own custom Mailables in the config file (`mailable_for_first_verification` and `mailable_for_new_email`).
+You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its email address for the first time (after registering). Alternatively you set your own custom Mailables in the config file:
+
+``` php
+<?php
+
+return [
+
+    'mailable_for_first_verification' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail::class,
+
+    'mailable_for_new_email' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail::class,
+
+];
+```
 
 You can also override the `sendPendingEmailVerificationMail` method to change the behaviour of sending the verification mail:
 
