@@ -55,13 +55,15 @@ class PendingUserEmail extends Model
     {
         $user = $this->user;
 
+        $dispatchEvent = !$user->hasVerifiedEmail() || $user->email !== $this->email;
+
         $user->email = $this->email;
         $user->save();
         $user->markEmailAsVerified();
 
         static::whereEmail($this->email)->get()->each->delete();
 
-        event(new Verified($user));
+        $dispatchEvent ? event(new Verified($user)) : null;
     }
 
     /**
