@@ -18,8 +18,6 @@ trait MustVerifyNewEmail
      */
     public function newEmail(string $email):?PendingUserEmail
     {
-        $this->clearPendingEmail();
-
         if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
             return null;
         }
@@ -37,6 +35,8 @@ trait MustVerifyNewEmail
      */
     public function createPendingUserEmailModel(string $email): PendingUserEmail
     {
+        $this->clearPendingEmail();
+
         return PendingUserEmail::create([
             'user_type' => get_class($this),
             'user_id'   => $this->getKey(),

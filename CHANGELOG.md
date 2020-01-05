@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-user-email` will be documented in this file
 
+## 1.0.5 - 2020-01-05
+
+- refactoring
+
 ## 1.0.4 - 2020-01-05
 
 - publishes the migration only once
