@@ -20,7 +20,9 @@ trait VerifiesPendingEmails
             throw new InvalidVerificationLinkException(
                 __('The verification link is not valid anymore.')
             );
-        })->activate();
+        })->tap(function (PendingUserEmail $pendingUserEmail) {
+            $pendingUserEmail->activate();
+        })->user;
 
         if (config('verify-new-email.login_after_verification')) {
             Auth::guard()->login($user);

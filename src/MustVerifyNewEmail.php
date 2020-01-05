@@ -24,14 +24,25 @@ trait MustVerifyNewEmail
             return null;
         }
 
-        return tap(PendingUserEmail::create([
+        return $this->createPendingUserEmailModel($email)->tap(function (PendingUserEmail $model) {
+            $this->sendPendingEmailVerificationMail($model);
+        });
+    }
+
+    /**
+     * Createsa new PendingUserModel model for the given email.
+     *
+     * @param string $email
+     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     */
+    public function createPendingUserEmailModel(string $email): PendingUserEmail
+    {
+        return PendingUserEmail::create([
             'user_type' => get_class($this),
             'user_id'   => $this->getKey(),
             'email'     => $email,
             'token'     => Password::broker()->getRepository()->createNewToken(),
-        ]), function ($pendingUserEmail) {
-            $this->sendPendingEmailVerificationMail($pendingUserEmail);
-        });
+        ]);
     }
 
     /**

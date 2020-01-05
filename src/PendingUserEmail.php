@@ -5,9 +5,12 @@ namespace ProtoneMedia\LaravelVerifyNewEmail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Traits\Tappable;
 
 class PendingUserEmail extends Model
 {
+    use Tappable;
+
     /**
      * This model won't be updated.
      */
@@ -50,15 +53,15 @@ class PendingUserEmail extends Model
      */
     public function activate()
     {
-        return tap($this->user, function ($user) {
-            $user->email = $this->email;
-            $user->save();
-            $user->markEmailAsVerified();
+        $user = $this->user;
 
-            static::whereEmail($this->email)->get()->each->delete();
+        $user->email = $this->email;
+        $user->save();
+        $user->markEmailAsVerified();
 
-            event(new Verified($user));
-        });
+        static::whereEmail($this->email)->get()->each->delete();
+
+        event(new Verified($user));
     }
 
     /**
