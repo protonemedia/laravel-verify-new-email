@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-user-email` will be documented in this file
 
+## 1.0.6 - 2020-01-06
+
+- added `web` middleware to verification route
+
 ## 1.0.5 - 2020-01-05
 
 - don't fire event if nothing has changed
