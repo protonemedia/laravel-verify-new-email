@@ -3,7 +3,6 @@
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
 use Illuminate\Support\Facades\Auth;
-use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 trait VerifiesPendingEmails
 {
@@ -16,11 +15,11 @@ trait VerifiesPendingEmails
      */
     public function verify(string $token)
     {
-        $user = PendingUserEmail::whereToken($token)->firstOr(['*'], function () {
+        $user = app(config('verify-new-email.model'))->whereToken($token)->firstOr(['*'], function () {
             throw new InvalidVerificationLinkException(
                 __('The verification link is not valid anymore.')
             );
-        })->tap(function (PendingUserEmail $pendingUserEmail) {
+        })->tap(function ($pendingUserEmail) {
             $pendingUserEmail->activate();
         })->user;
 

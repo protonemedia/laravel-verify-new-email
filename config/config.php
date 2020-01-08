@@ -17,6 +17,11 @@ return [
     'login_after_verification' => true,
 
     /**
+     * Model class that will be used to store and retrieve the tokens.
+     */
+    'model' => \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail::class,
+
+    /**
      * The Mailable that will be sent when the User wants to verify
      * its initial email address (that got used with registering).
      */

@@ -4,6 +4,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail;
 
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Traits\Tappable;
 
@@ -26,7 +27,7 @@ class PendingUserEmail extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function user()
+    public function user():MorphTo
     {
         return $this->morphTo('user');
     }

@@ -2,9 +2,9 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
-use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 
 trait MustVerifyNewEmail
 {
@@ -14,15 +14,15 @@ trait MustVerifyNewEmail
      * to the new email address.
      *
      * @param string $email
-     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function newEmail(string $email):?PendingUserEmail
+    public function newEmail(string $email):?Model
     {
         if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
             return null;
         }
 
-        return $this->createPendingUserEmailModel($email)->tap(function (PendingUserEmail $model) {
+        return $this->createPendingUserEmailModel($email)->tap(function ($model) {
             $this->sendPendingEmailVerificationMail($model);
         });
     }
@@ -31,13 +31,13 @@ trait MustVerifyNewEmail
      * Createsa new PendingUserModel model for the given email.
      *
      * @param string $email
-     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function createPendingUserEmailModel(string $email): PendingUserEmail
+    public function createPendingUserEmailModel(string $email): Model
     {
         $this->clearPendingEmail();
 
-        return PendingUserEmail::create([
+        return app(config('verify-new-email.model'))->create([
             'user_type' => get_class($this),
             'user_id'   => $this->getKey(),
             'email'     => $email,
@@ -52,7 +52,7 @@ trait MustVerifyNewEmail
      */
     public function getPendingEmail():?string
     {
-        return PendingUserEmail::forUser($this)->value('email');
+        return app(config('verify-new-email.model'))->forUser($this)->value('email');
     }
 
     /**
@@ -62,16 +62,16 @@ trait MustVerifyNewEmail
      */
     public function clearPendingEmail()
     {
-        PendingUserEmail::forUser($this)->get()->each->delete();
+        app(config('verify-new-email.model'))->forUser($this)->get()->each->delete();
     }
 
     /**
      * Sends the VerifyNewEmail Mailable to the new email address.
      *
-     * @param \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail $pendingUserEmail
+     * @param \Illuminate\Database\Eloquent\Model $pendingUserEmail
      * @return mixed
      */
-    public function sendPendingEmailVerificationMail(PendingUserEmail $pendingUserEmail)
+    public function sendPendingEmailVerificationMail(Model $pendingUserEmail)
     {
         $mailableClass = config('verify-new-email.mailable_for_first_verification');
 
@@ -87,11 +87,11 @@ trait MustVerifyNewEmail
     /**
      * Grabs the pending user email address, generates a new token and sends the Mailable.
      *
-     * @return \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function resendPendingEmailVerificationMail():?PendingUserEmail
+    public function resendPendingEmailVerificationMail():?Model
     {
-        $pendingUserEmail = PendingUserEmail::forUser($this)->firstOrFail();
+        $pendingUserEmail = app(config('verify-new-email.model'))->forUser($this)->firstOrFail();
 
         return $this->newEmail($pendingUserEmail->email);
     }

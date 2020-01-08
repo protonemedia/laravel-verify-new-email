@@ -4,16 +4,16 @@ namespace ProtoneMedia\LaravelVerifyNewEmail\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class VerifyFirstEmail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
-     * @var \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail
+     * @var \Illuminate\Database\Eloquent\Model
      */
     public $pendingUserEmail;
 
@@ -22,7 +22,7 @@ class VerifyFirstEmail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(PendingUserEmail $pendingUserEmail)
+    public function __construct(Model $pendingUserEmail)
     {
         $this->pendingUserEmail = $pendingUserEmail;
     }
