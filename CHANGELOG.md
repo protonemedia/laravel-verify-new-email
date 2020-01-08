@@ -5,6 +5,7 @@ All notable changes to `laravel-user-email` will be documented in this file
 ## 1.0.7 - 2020-01-08
 
 - support for custom model
+- setting to remember login
 
 ## 1.0.6 - 2020-01-06
 

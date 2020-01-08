@@ -17,6 +17,11 @@ return [
     'login_after_verification' => true,
 
     /**
+     * Should the user be permanently "remembered" by the application.
+     */
+    'login_remember' => false,
+
+    /**
      * Model class that will be used to store and retrieve the tokens.
      */
     'model' => \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail::class,
