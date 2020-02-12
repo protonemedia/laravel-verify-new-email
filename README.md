@@ -173,7 +173,7 @@ If you discover any security related issues, please email pascal@protone.media i
 
 ## Credits
 
-- [Pascal Baljet](https://github.com/protonemedia)
+- [Pascal Baljet](https://github.com/pascalbaljetmedia)
 - [All Contributors](../../contributors)
 
 ## License
