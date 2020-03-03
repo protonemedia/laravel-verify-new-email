@@ -1,6 +1,10 @@
 # Changelog
 
-All notable changes to `laravel-user-email` will be documented in this file
+All notable changes to `laravel-verify-new-email` will be documented in this file
+
+## 1.1.0 - 2020-03-03
+
+- support for Laravel 7.0
 
 ## 1.0.7 - 2020-01-08
 
