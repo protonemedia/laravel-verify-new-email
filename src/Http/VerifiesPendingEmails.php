@@ -2,12 +2,10 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 trait VerifiesPendingEmails
 {
-    use AuthenticatesUsers;
-
     /**
      * Mark the user's new email address as verified.
      *
@@ -26,7 +24,7 @@ trait VerifiesPendingEmails
         })->user;
 
         if (config('verify-new-email.login_after_verification')) {
-            return $this->guard()->login($user, config('verify-new-email.login_remember'));
+            return Auth::guard()->login($user, config('verify-new-email.login_remember'));
         }
 
         return $this->authenticated();
