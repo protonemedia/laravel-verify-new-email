@@ -16,7 +16,7 @@ trait MustVerifyNewEmail
      * @param string $email
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function newEmail(string $email):?Model
+    public function newEmail(string $email): ?Model
     {
         if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
             return null;
@@ -27,8 +27,19 @@ trait MustVerifyNewEmail
         });
     }
 
+    public function getEmailVerificationModel(): Model
+    {
+        $modelClass = config('verify-new-email.model');
+
+        if (!$modelClass) {
+            throw new InvalidEmailVerificationModelException;
+        }
+
+        return app($modelClass);
+    }
+
     /**
-     * Createsa new PendingUserModel model for the given email.
+     * Creates new PendingUserModel model for the given email.
      *
      * @param string $email
      * @return \Illuminate\Database\Eloquent\Model
@@ -37,7 +48,7 @@ trait MustVerifyNewEmail
     {
         $this->clearPendingEmail();
 
-        return app(config('verify-new-email.model'))->create([
+        return $this->getEmailVerificationModel()->create([
             'user_type' => get_class($this),
             'user_id'   => $this->getKey(),
             'email'     => $email,
@@ -50,9 +61,9 @@ trait MustVerifyNewEmail
      *
      * @return string|null
      */
-    public function getPendingEmail():?string
+    public function getPendingEmail(): ?string
     {
-        return app(config('verify-new-email.model'))->forUser($this)->value('email');
+        return $this->getEmailVerificationModel()->forUser($this)->value('email');
     }
 
     /**
@@ -62,7 +73,7 @@ trait MustVerifyNewEmail
      */
     public function clearPendingEmail()
     {
-        app(config('verify-new-email.model'))->forUser($this)->get()->each->delete();
+        $this->getEmailVerificationModel()->forUser($this)->get()->each->delete();
     }
 
     /**
@@ -89,9 +100,9 @@ trait MustVerifyNewEmail
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function resendPendingEmailVerificationMail():?Model
+    public function resendPendingEmailVerificationMail(): ?Model
     {
-        $pendingUserEmail = app(config('verify-new-email.model'))->forUser($this)->firstOrFail();
+        $pendingUserEmail = $this->getEmailVerificationModel()->forUser($this)->firstOrFail();
 
         return $this->newEmail($pendingUserEmail->email);
     }

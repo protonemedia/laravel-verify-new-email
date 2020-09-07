@@ -4,12 +4,29 @@ namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
+use ProtoneMedia\LaravelVerifyNewEmail\InvalidEmailVerificationModelException;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class MustVerifyNewEmailTest extends TestCase
 {
+    /** @test */
+    public function it_throws_an_exception_when_the_model_class_configuration_is_not_set()
+    {
+        $user = $this->user();
+
+        config(['verify-new-email.model' => null]);
+
+        try {
+            $user->getEmailVerificationModel();
+        } catch (InvalidEmailVerificationModelException $e) {
+            return $this->assertTrue(true);
+        }
+
+        $this->fail('Should have thrown InvalidEmailVerificationModelException');
+    }
+
     /** @test */
     public function it_doesnt_send_a_verification_mail_if_the_email_didnt_change()
     {

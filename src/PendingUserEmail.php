@@ -27,7 +27,7 @@ class PendingUserEmail extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function user():MorphTo
+    public function user(): MorphTo
     {
         return $this->morphTo('user');
     }
