@@ -1,7 +1,7 @@
 # Laravel Verify New Email
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
-[![Build Status](https://img.shields.io/travis/protonemedia/laravel-verify-new-email/master.svg?style=flat-square)](https://travis-ci.org/protonemedia/laravel-verify-new-email)
+![run-tests](https://github.com/protonemedia/laravel-verify-new-email/workflows/run-tests/badge.svg)
 [![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-verify-new-email)
 [![Total Downloads](https://img.shields.io/packagist/dt/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
 
