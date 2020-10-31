@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
+## 1.3.0 - 2020-10-31
+
+- Support for PHP 8.0
+- Dropped support for PHP 7.2
+
 ## 1.2.1 - 2020-09-07
 
 - Added `InvalidEmailVerificationModelException`
