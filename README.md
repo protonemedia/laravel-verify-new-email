@@ -5,11 +5,12 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-verify-new-email)
 [![Total Downloads](https://img.shields.io/packagist/dt/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
 
+
 Laravel supports verifying email addresses out of the box. This package adds support for verifying *new* email addresses. When a user updates its email address, it won't replace the old one until the new one is verified. Super easy to set up, still fully customizable. If you want it can be used as a drop-in replacement for the built-in Email Verification features as this package supports unauthenticated verification and auto-login. Support for Laravel 6.0 and higher and requires PHP 7.3 or higher.
 
 ## Blogpost
 
-If you want to know more about the background of this package, please read [the blogpost](https://protone.media/en/blog/an-add-on-to-laravels-built-in-email-verification-only-update-a-users-email-address-if-the-new-one-is-verified-as-well).
+If you want to know more about the background of this package, please read [the blog post](https://protone.media/en/blog/an-add-on-to-laravels-built-in-email-verification-only-update-a-users-email-address-if-the-new-one-is-verified-as-well).
 
 ## Support
 
@@ -71,13 +72,13 @@ $user->resendPendingEmailVerificationMail();
 $user->clearPendingEmail();
 ```
 
-The `newEmail` method doesn't update the user, its current email address stays current until the new one if verified. It stores a token (associated to the user and new email address) in the `pending_user_emails` table. Once the user verifies the email address by clicking the link in the mail, the user model will be updated and the token will be removed from the `pending_user_emails` table.
+The `newEmail` method doesn't update the user, its current email address stays current until the new one if verified. It stores a token (associated with the user and new email address) in the `pending_user_emails` table. Once the user verifies the email address by clicking the link in the mail, the user model will be updated and the token will be removed from the `pending_user_emails` table.
 
-The `resendPendingEmailVerificationMail` does exactly the same, it just grabs the new email address from the previous attempt.
+The `resendPendingEmailVerificationMail` does the same, it just grabs the new email address from the previous attempt.
 
 ### Login after verification
 
-The user that verified its email address will be logged in automatically. You can disable this by chaning the `login_after_verification` configuration setting to `false`.
+The user that verified its email address will be logged in automatically. You can disable this by changing the `login_after_verification` configuration setting to `false`.
 
 ### Overriding the default Laravel Email Verification
 
@@ -106,7 +107,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
 ### Customization
 
-You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its initial email address for the first time (after registering). Alternatively you set your own custom Mailables classes in the config file:
+You can change the content of the verification mail by editing the published views which can be found in the `resources/views/vendor/verify-new-email` folder. The `verifyNewEmail.blade.php` view will be sent when verifying *updated* email addresses. The `verifyFirstEmail.blade.php` view will be sent when a User verifies its initial email address for the first time (after registering). Alternatively, you set your own custom Mailables classes in the config file:
 
 ``` php
 <?php
@@ -165,7 +166,7 @@ composer test
 
 ### Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -177,8 +178,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 * [`Laravel Blade On Demand`](https://github.com/protonemedia/laravel-blade-on-demand): Laravel package to compile Blade templates in memory.
 * [`Laravel Cross Eloquent Search`](https://github.com/protonemedia/laravel-cross-eloquent-search): Laravel package to search through multiple Eloquent models.
 * [`Laravel Eloquent Scope as Select`](https://github.com/protonemedia/laravel-eloquent-scope-as-select): Stop duplicating your Eloquent query scopes and constraints in PHP. This package lets you re-use your query scopes and constraints by adding them as a subquery.
-* [`Laravel Eloquent Where Not`](https://github.com/protonemedia/laravel-eloquent-where-not): This Laravel package allows you to flip/invert an Eloquent scope, or really any query constraint.
-* [`Laravel FFMpeg`](https://github.com/protonemedia/laravel-ffmpeg): This package provides an integration with FFmpeg for Laravel. The storage of the files is handled by Laravel's Filesystem.
+* [`Laravel Eloquent Where Not`](https://github.com/protonemedia/laravel-eloquent-where-not): This Laravel package allows you to flip/invert an Eloquent scope, or any query constraint.
+* [`Laravel FFMpeg`](https://github.com/protonemedia/laravel-ffmpeg): This package provides integration with FFmpeg for Laravel. The storage of the files is handled by Laravel's Filesystem.
 * [`Laravel Form Components`](https://github.com/protonemedia/laravel-form-components): Blade components to rapidly build forms with Tailwind CSS Custom Forms and Bootstrap 4. Supports validation, model binding, default values, translations, includes default vendor styling and fully customizable!
 * [`Laravel Mixins`](https://github.com/protonemedia/laravel-mixins): A collection of Laravel goodies.
 * [`Laravel Paddle`](https://github.com/protonemedia/laravel-paddle): Paddle.com API integration for Laravel with support for webhooks/events.
@@ -186,7 +187,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email pascal@protone.media instead of using the issue tracker.
+If you discover any security-related issues, please email pascal@protone.media instead of using the issue tracker.
 
 ## Credits
 
