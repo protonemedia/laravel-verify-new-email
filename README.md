@@ -8,6 +8,10 @@
 
 Laravel supports verifying email addresses out of the box. This package adds support for verifying *new* email addresses. When a user updates its email address, it won't replace the old one until the new one is verified. Super easy to set up, still fully customizable. If you want it can be used as a drop-in replacement for the built-in Email Verification features as this package supports unauthenticated verification and auto-login. Support for Laravel 6.0 and higher and requires PHP 7.3 or higher.
 
+## Launcher 🚀
+
+Hey! We've built a Docker-based deployment tool to launch apps and sites fully containerized. You can find all features and the roadmap on our [website](https://uselauncher.com), and we are on [Twitter](https://twitter.com/uselauncher) as well!
+
 ## Blogpost
 
 If you want to know more about the background of this package, please read [the blog post](https://protone.media/en/blog/an-add-on-to-laravels-built-in-email-verification-only-update-a-users-email-address-if-the-new-one-is-verified-as-well).
