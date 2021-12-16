@@ -12,7 +12,7 @@ use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class VerifyNewEmailControllerTest extends TestCase
 {
-    public function setUp():void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -57,8 +57,9 @@ class VerifyNewEmailControllerTest extends TestCase
 
         config(['verify-new-email.login_after_verification' => true]);
 
-        app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+        $response = app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
 
+        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertAuthenticatedAs($user);
     }
 

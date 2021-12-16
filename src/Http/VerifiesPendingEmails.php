@@ -24,7 +24,7 @@ trait VerifiesPendingEmails
         })->user;
 
         if (config('verify-new-email.login_after_verification')) {
-            return Auth::guard()->login($user, config('verify-new-email.login_remember'));
+            Auth::guard()->login($user, config('verify-new-email.login_remember'));
         }
 
         return $this->authenticated();

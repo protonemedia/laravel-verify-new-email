@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
+## 1.3.1 - 2010-12-16
+
+- Redirect bugfix
+
 ## 1.3.0 - 2020-10-31
 
 - Support for PHP 8.0
