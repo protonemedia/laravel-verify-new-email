@@ -2,7 +2,13 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
-## 1.3.1 - 2010-12-16
+## 1.4.0 - 2021-12-19
+
+- Support for PHP 8.1
+- Dropped support for PHP 7.3
+- Dropped support for Laravel 6 and 7
+
+## 1.3.1 - 2021-12-16
 
 - Redirect bugfix
 
