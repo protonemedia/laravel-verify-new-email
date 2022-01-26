@@ -73,6 +73,8 @@ class PendingUserEmail extends Model
         $dispatchEvent ? event(new Verified($user)) : null;
 
         if ($this->type === PendingUserEmail::TYPE_RECOVER) {
+            static::forUser($this->user)->get()->each->delete();
+
             return;
         }
         
