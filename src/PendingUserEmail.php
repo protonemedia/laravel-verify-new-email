@@ -5,6 +5,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Traits\Tappable;
 
@@ -58,6 +59,8 @@ class PendingUserEmail extends Model
 
         $dispatchEvent = !$user->hasVerifiedEmail() || $user->email !== $this->email;
 
+        $originalEmail = $user->email;
+
         $user->email = $this->email;
         $user->save();
         $user->markEmailAsVerified();
@@ -65,6 +68,8 @@ class PendingUserEmail extends Model
         static::whereEmail($this->email)->get()->each->delete();
 
         $dispatchEvent ? event(new Verified($user)) : null;
+
+        $this->sendNotificationToOldEmail($originalEmail);
     }
 
     /**
@@ -79,5 +84,20 @@ class PendingUserEmail extends Model
             now()->addMinutes(config('auth.verification.expire', 60)),
             ['token' => $this->token]
         );
+    }
+
+    /**
+     * Send a notification to original email address regarding change of email address.
+     *
+     * @param string $originalEmail
+     * @return void
+     */
+    public function sendNotificationToOldEmail(string $originalEmail)
+    {
+        $mailableClass = config('verify-new-email.mailable_for_new_email_notification');
+
+        $mailable = new $mailableClass();
+
+        return Mail::to($originalEmail)->send($mailable);
     }
 }

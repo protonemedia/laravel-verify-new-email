@@ -38,4 +38,9 @@ return [
      * update its email address.
      */
     'mailable_for_new_email' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail::class,
+
+    /**
+     * The Mailable that will be sent when the User's email address has been updated.
+     */
+    'mailable_for_new_email_notification' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\NotifyOldEmail::class,
 ];

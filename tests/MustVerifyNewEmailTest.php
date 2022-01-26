@@ -5,6 +5,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use ProtoneMedia\LaravelVerifyNewEmail\InvalidEmailVerificationModelException;
+use ProtoneMedia\LaravelVerifyNewEmail\Mail\NotifyOldEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
@@ -147,5 +148,22 @@ class MustVerifyNewEmailTest extends TestCase
         $this->assertDatabaseMissing('pending_user_emails', [
             'email' => 'new@example.com',
         ]);
+    }
+
+    /** @test */
+    public function it_notifies_old_email_address_after_email_change()
+    {
+        Mail::fake();
+    
+        $user = $this->user();
+    
+        $user->email_verified_at = now();
+        $user->save();
+    
+        $model = $user->newEmail('new@example.com');
+
+        $model->activate();
+        
+        Mail::assertQueued(NotifyOldEmail::class);
     }
 }
