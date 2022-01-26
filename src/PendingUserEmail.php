@@ -72,7 +72,9 @@ class PendingUserEmail extends Model
 
         $dispatchEvent ? event(new Verified($user)) : null;
 
-        $this->sendNotificationToOldEmail($originalEmail);
+        if ($this->type === PendingUserEmail::TYPE_RECOVER) {
+            return;
+        }
         
         if (config('verify-new-email.send_recovery_email') === 'after_verification') {
             $user->newRecovery($originalEmail);
@@ -91,20 +93,5 @@ class PendingUserEmail extends Model
             now()->addMinutes(config('auth.verification.expire', 60)),
             ['token' => $this->token]
         );
-    }
-
-    /**
-     * Send a notification to original email address regarding change of email address.
-     *
-     * @param string $originalEmail
-     * @return void
-     */
-    public function sendNotificationToOldEmail(string $originalEmail)
-    {
-        $mailableClass = config('verify-new-email.mailable_for_new_email_notification');
-
-        $mailable = new $mailableClass();
-
-        return Mail::to($originalEmail)->send($mailable);
     }
 }

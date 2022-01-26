@@ -34,10 +34,10 @@ class RecoverEmail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $this->subject(__('Recover account'));
+        $this->subject(__('Your email address has been changed'));
 
         return $this->markdown('verify-new-email::recoverEmail', [
-            'url' => '',
+            'url' => $this->pendingUserEmail->verificationUrl(),
         ]);
     }
 }

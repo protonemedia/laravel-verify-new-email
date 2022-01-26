@@ -152,23 +152,6 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
-    public function it_notifies_old_email_address_after_email_change()
-    {
-        Mail::fake();
-    
-        $user = $this->user();
-    
-        $user->email_verified_at = now();
-        $user->save();
-    
-        $model = $user->newEmail('new@example.com');
-
-        $model->activate();
-        
-        Mail::assertQueued(NotifyOldEmail::class);
-    }
-
-    /** @test */
     public function it_sends_a_recovery_email_before_verification()
     {
         config(['verify-new-email.send_recovery_email' => 'before_verification']);

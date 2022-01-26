@@ -1,7 +1,7 @@
 @component('mail::message')
-# Recover account
+# Your email address has been changed
 
-Please click the button below to recover your account.
+If you did not change your email address, click the button below to recover your account.
 
 @component('mail::button', ['url' => $url])
 Recover
