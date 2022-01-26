@@ -13,6 +13,9 @@ class PendingUserEmail extends Model
 {
     use Tappable;
 
+    const TYPE_PENDING = 'pending';
+    const TYPE_RECOVER = 'recover';
+
     /**
      * This model won't be updated.
      */
@@ -70,6 +73,10 @@ class PendingUserEmail extends Model
         $dispatchEvent ? event(new Verified($user)) : null;
 
         $this->sendNotificationToOldEmail($originalEmail);
+        
+        if (config('verify-new-email.send_recovery_email') === 'after_verification') {
+            $user->newRecovery($originalEmail);
+        }
     }
 
     /**

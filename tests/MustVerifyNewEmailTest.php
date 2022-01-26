@@ -6,6 +6,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use ProtoneMedia\LaravelVerifyNewEmail\InvalidEmailVerificationModelException;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\NotifyOldEmail;
+use ProtoneMedia\LaravelVerifyNewEmail\Mail\RecoverEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
@@ -165,5 +166,70 @@ class MustVerifyNewEmailTest extends TestCase
         $model->activate();
         
         Mail::assertQueued(NotifyOldEmail::class);
+    }
+
+    /** @test */
+    public function it_sends_a_recovery_email_before_verification()
+    {
+        config(['verify-new-email.send_recovery_email' => 'before_verification']);
+
+        Mail::fake();
+        
+        $user = $this->user();
+        
+        $user->email_verified_at = now();
+        $user->save();
+        
+        $user->newEmail('new@example.com');
+
+        $this->assertDatabaseHas('pending_user_emails', [
+            'email' => $user->email,
+            'type'  => PendingUserEmail::TYPE_RECOVER
+        ]);
+            
+        Mail::assertQueued(RecoverEmail::class);
+    }
+
+    /** @test */
+    public function it_sends_a_recovery_email_after_verification()
+    {
+        config(['verify-new-email.send_recovery_email' => 'after_verification']);
+    
+        Mail::fake();
+            
+        $user = $this->user();
+            
+        $user->email_verified_at = now();
+        $user->save();
+            
+        $model = $user->newEmail('new@example.com');
+
+        $model->activate();
+
+        $this->assertDatabaseHas('pending_user_emails', [
+            'email' => $user->email,
+            'type'  => PendingUserEmail::TYPE_RECOVER
+        ]);
+                
+        Mail::assertQueued(RecoverEmail::class);
+    }
+
+    /** @test */
+    public function it_does_not_send_a_recovery_email_when_disabled_in_config()
+    {
+        config(['verify-new-email.send_recovery_email' => false]);
+        
+        Mail::fake();
+                
+        $user = $this->user();
+                
+        $user->email_verified_at = now();
+        $user->save();
+                
+        $model = $user->newEmail('new@example.com');
+    
+        $model->activate();
+                    
+        Mail::assertNotQueued(RecoverEmail::class);
     }
 }

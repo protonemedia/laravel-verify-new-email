@@ -22,6 +22,13 @@ return [
     'login_remember' => false,
 
     /**
+     * Configure when a recovery email is being send. Set to false to disable this feature.
+     * 
+     * Options: false, 'before_verification', 'after_verification'
+     */
+    'send_recovery_email' => false,
+
+    /**
      * Model class that will be used to store and retrieve the tokens.
      */
     'model' => \ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail::class,
@@ -43,4 +50,9 @@ return [
      * The Mailable that will be sent when the User's email address has been updated.
      */
     'mailable_for_new_email_notification' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\NotifyOldEmail::class,
+
+    /**
+     * The Mailable that will be sent for recovery.
+     */
+    'mailable_for_recovery_email' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\RecoverEmail::class
 ];

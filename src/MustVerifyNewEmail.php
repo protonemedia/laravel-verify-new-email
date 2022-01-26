@@ -18,8 +18,14 @@ trait MustVerifyNewEmail
      */
     public function newEmail(string $email): ?Model
     {
-        if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
+        $currentEmail = $this->getEmailForVerification();
+
+        if ($currentEmail === $email && $this->hasVerifiedEmail()) {
             return null;
+        }
+
+        if (config('verify-new-email.send_recovery_email') === 'before_verification') {
+            $this->newRecovery($currentEmail);
         }
 
         return $this->createPendingUserEmailModel($email)->tap(function ($model) {
@@ -53,6 +59,7 @@ trait MustVerifyNewEmail
             'user_id'   => $this->getKey(),
             'email'     => $email,
             'token'     => Password::broker()->getRepository()->createNewToken(),
+            'type'      => PendingUserEmail::TYPE_PENDING,
         ]);
     }
 
@@ -67,13 +74,23 @@ trait MustVerifyNewEmail
     }
 
     /**
-     * Deletes the pending email address models for this user.
+     * Deletes the pending email address models for this user, with type pending.
      *
      * @return void
      */
     public function clearPendingEmail()
     {
-        $this->getEmailVerificationModel()->forUser($this)->get()->each->delete();
+        $this->getEmailVerificationModel()->forUser($this)->where('type', PendingUserEmail::TYPE_PENDING)->get()->each->delete();
+    }
+
+    /**
+     * Deletes the pending email address models for this user, with type recover.
+     *
+     * @return void
+     */
+    public function clearRecoverEmail()
+    {
+        $this->getEmailVerificationModel()->forUser($this)->where('type', PendingUserEmail::TYPE_RECOVER)->get()->each->delete();
     }
 
     /**
@@ -105,5 +122,52 @@ trait MustVerifyNewEmail
         $pendingUserEmail = $this->getEmailVerificationModel()->forUser($this)->firstOrFail();
 
         return $this->newEmail($pendingUserEmail->email);
+    }
+
+    /**
+     * Create a new PendingUserEmail model for recovery.
+     *
+     * @param string $email
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    public function newRecovery(string $email): ?Model
+    {
+        return $this->createRecoveryPendingUserEmailModel($email)->tap(function ($model) {
+            $this->sendRecoveryMail($model);
+        });
+    }
+
+    /**
+     * Creates new PendingUserModel model for the given email, with type recover.
+     *
+     * @param string $currentEmail
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function createRecoveryPendingUserEmailModel(string $currentEmail): Model
+    {
+        $this->clearRecoverEmail();
+
+        return $this->getEmailVerificationModel()->create([
+            'user_type' => get_class($this),
+            'user_id'   => $this->getKey(),
+            'email'     => $currentEmail,
+            'token'     => Password::broker()->getRepository()->createNewToken(),
+            'type'      => PendingUserEmail::TYPE_RECOVER,
+        ]);
+    }
+
+    /**
+     * Sends the recoverEmail Mailable to the old email address.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $pendingUserEmail
+     * @return mixed
+     */
+    public function sendRecoveryMail(Model $pendingUserEmail)
+    {
+        $mailableClass = config('verify-new-email.mailable_for_recovery_email');
+
+        $mailable = new $mailableClass($pendingUserEmail);
+
+        return Mail::to($pendingUserEmail->email)->send($mailable);
     }
 }

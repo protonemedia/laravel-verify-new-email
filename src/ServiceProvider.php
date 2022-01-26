@@ -21,7 +21,8 @@ class ServiceProvider extends BaseServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../database/migrations/create_pending_user_emails_table.php.stub' => $this->getMigrationFileName($filesystem),
+                __DIR__ . '/../database/migrations/create_pending_user_emails_table.php.stub'      => $this->getMigrationFileName($filesystem, 'create_pending_user_emails_table', 0),
+                __DIR__ . '/../database/migrations/add_type_to_pending_user_emails_table.php.stub' => $this->getMigrationFileName($filesystem, 'add_type_to_pending_user_emails_table', 1),
             ], 'migrations');
 
             $this->publishes([
@@ -42,15 +43,15 @@ class ServiceProvider extends BaseServiceProvider
      * @param Filesystem $filesystem
      * @return string
      */
-    protected function getMigrationFileName(Filesystem $filesystem): string
+    protected function getMigrationFileName(Filesystem $filesystem, $name, $addSeconds): string
     {
-        $timestamp = date('Y_m_d_His');
+        $timestamp = now()->addSeconds($addSeconds)->format('Y_m_d_His');
 
         return Collection::make($this->app->databasePath('migrations') . DIRECTORY_SEPARATOR)
-            ->flatMap(function ($path) use ($filesystem) {
-                return $filesystem->glob("{$path}*_create_pending_user_emails_table.php");
+            ->flatMap(function ($path) use ($filesystem, $name) {
+                return $filesystem->glob("{$path}*_{$name}.php");
             })
-            ->push($this->app->databasePath("migrations/{$timestamp}_create_pending_user_emails_table.php"))
+            ->push($this->app->databasePath("migrations/{$timestamp}_{$name}.php"))
             ->first();
     }
 
