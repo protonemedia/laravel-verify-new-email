@@ -90,4 +90,46 @@ class VerifyNewEmailControllerTest extends TestCase
 
         $this->fail('Should have thrown InvalidVerificationLinkException');
     }
+
+    /** @test */
+    public function it_can_recover_an_account()
+    {
+        config(['verify-new-email.send_recovery_email' => 'before_verification']);
+
+        Mail::fake();
+
+        $user = $this->user();
+
+        $user->newEmail('new@example.com');
+
+        $pendingUserEmail = $user->newRecovery('old@example.com');
+
+        $this->assertNotEmpty(PendingUserEmail::where('type', 'recover')->get());
+
+        app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+
+        $this->assertEmpty(PendingUserEmail::where('type', 'recover')->get());
+        $this->assertEquals($user->fresh()->email, 'old@example.com');
+    }
+
+    /** @test */
+    public function it_can_recover_an_account_after_email_has_been_changed()
+    {
+        config(['verify-new-email.send_recovery_email' => 'before_verification']);
+    
+        Mail::fake();
+    
+        $user = $this->user();
+    
+        $pendingUserEmail = $user->newEmail('new@example.com');
+        app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+        $this->assertEquals($user->fresh()->email, 'new@example.com');
+
+        $recoverUserEmail = $user->newRecovery('old@example.com');
+        $this->assertNotEmpty(PendingUserEmail::where('type', 'recover')->get());
+    
+        app(VerifyNewEmailController::class)->verify($recoverUserEmail->token);
+        $this->assertEmpty(PendingUserEmail::where('type', 'recover')->get());
+        $this->assertEquals($user->fresh()->email, 'old@example.com');
+    }
 }
