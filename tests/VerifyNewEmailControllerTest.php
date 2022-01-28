@@ -122,11 +122,12 @@ class VerifyNewEmailControllerTest extends TestCase
         $user = $this->user();
     
         $pendingUserEmail = $user->newEmail('new@example.com');
-
-        // Assert email has been changed
+        
         app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+        
+        // Assert email has been changed
         $this->assertEquals($user->fresh()->email, 'new@example.com');
-
+        
         $recoverUserEmail = $user->newRecovery('old@example.com');
         
         // Assert account email can be recovered.
