@@ -20,6 +20,11 @@ If you want to know more about the background of this package, please read [the 
 
 We proudly support the community by developing Laravel packages and giving them away for free. Keeping track of issues and pull requests takes time, but we're happy to help! If this package saves you time or if you're relying on it professionally, please consider [supporting the maintenance and development](https://github.com/sponsors/pascalbaljet).
 
+## Requirements
+
+* PHP 7.4 or higher
+* Laravel 8 or higher
+
 ## Installation
 
 You can install the package via composer:
