@@ -12,7 +12,7 @@ return [
     'redirect_to' => '/home',
 
     /**
-     * Wether to login the user after successfully verifying its email.
+     * Whether to login the user after successfully verifying its email.
      */
     'login_after_verification' => true,
 
