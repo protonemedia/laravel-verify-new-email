@@ -132,6 +132,36 @@ class MustVerifyNewEmailTest extends TestCase
     }
 
     /** @test */
+    public function it_can_interact_with_the_mailable()
+    {
+        Mail::fake();
+
+        $user = $this->user();
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        $pendingUserEmail = $user->newEmail('new@example.com', function (VerifyNewEmail $mailable, PendingUserEmail $model) {
+            $mailable->bcc('test@test.com');
+            $this->assertTrue($model->exists);
+        });
+
+        Mail::assertQueued(VerifyNewEmail::class, function (Mailable $mailable) use ($pendingUserEmail) {
+            $this->assertTrue($mailable->pendingUserEmail->is($pendingUserEmail));
+
+            $this->assertTrue($mailable->hasTo('new@example.com'));
+
+            $this->assertFalse($mailable->hasTo('old@example.com'));
+            $this->assertFalse($mailable->hasCc('old@example.com'));
+            $this->assertFalse($mailable->hasBcc('old@example.com'));
+
+            $this->assertTrue($mailable->hasBcc('test@test.com'));
+
+            return true;
+        });
+    }
+
+    /** @test */
     public function it_deletes_previous_attempts_of_the_user_trying_to_verify_a_new_email()
     {
         Mail::fake();

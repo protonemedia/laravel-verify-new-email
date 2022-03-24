@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
+## 1.6.0 - 2022-02-24
+
+- Interact with the Mailable before sending
+
 ## 1.5.0 - 2022-02-04
 
 - Support for Laravel 9
