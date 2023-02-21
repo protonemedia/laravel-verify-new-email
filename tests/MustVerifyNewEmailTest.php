@@ -4,6 +4,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Testing\Fakes\MailFake;
 use ProtoneMedia\LaravelVerifyNewEmail\InvalidEmailVerificationModelException;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
@@ -102,14 +103,15 @@ class MustVerifyNewEmailTest extends TestCase
     /** @test */
     public function it_can_regenerate_a_token_and_mail_it()
     {
-        Mail::fake();
+        $mailRoot = Mail::getFacadeRoot();
+        Mail::swap(new MailFake($mailRoot));
 
         $user = $this->user();
 
         $pendingUserEmailFirst = $user->newEmail('new@example.com');
 
         // reset mail fake
-        Mail::fake();
+        Mail::swap(new MailFake($mailRoot));
         Mail::assertNothingQueued();
 
         $pendingUserEmailSecond = $user->resendPendingEmailVerificationMail();
