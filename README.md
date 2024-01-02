@@ -24,8 +24,8 @@ If you want to know more about the background of this package, please read [the 
 
 ## Requirements
 
-* PHP 8.0 or higher
-* Laravel 9 or higher
+* PHP 8.1 or higher
+* Laravel 10 or higher
 
 ## Installation
 
