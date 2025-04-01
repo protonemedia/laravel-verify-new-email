@@ -14,10 +14,10 @@ trait MustVerifyNewEmail
      * to the new email address.
      *
      * @param string $email
-     * @param callable $withMailable
+     * @param callable|null $withMailable
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function newEmail(string $email, callable $withMailable = null): ?Model
+    public function newEmail(string $email, ?callable $withMailable = null): ?Model
     {
         if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
             return null;
@@ -81,10 +81,10 @@ trait MustVerifyNewEmail
      * Sends the VerifyNewEmail Mailable to the new email address.
      *
      * @param \Illuminate\Database\Eloquent\Model $pendingUserEmail
-     * @param callable $withMailable
+     * @param callable|null $withMailable
      * @return mixed
      */
-    public function sendPendingEmailVerificationMail(Model $pendingUserEmail, callable $withMailable = null)
+    public function sendPendingEmailVerificationMail(Model $pendingUserEmail, ?callable $withMailable = null)
     {
         $mailableClass = config('verify-new-email.mailable_for_first_verification');
 
