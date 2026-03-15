@@ -20,7 +20,7 @@ If you want to know more about the background of this package, please read [the 
 ## Requirements
 
 * PHP 8.2 or higher
-* Laravel 10 or higher
+* Laravel 11 or higher
 
 ## Installation
 
