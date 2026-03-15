@@ -86,6 +86,16 @@ The `resendPendingEmailVerificationMail` does the same, it just grabs the new em
 
 The user that verified its email address will be logged in automatically. You can disable this by changing the `login_after_verification` configuration setting to `false`.
 
+### API usage
+
+When the verification endpoint receives a request that expects JSON (e.g. from a SPA or mobile app), it returns a JSON response instead of a redirect:
+
+```json
+{
+    "verified": true
+}
+```
+
 ### Overriding the default Laravel Email Verification
 
 The default [Laravel implementation](https://laravel.com/docs/master/verification) requires the user to be logged in before it can verify its email address. If you want to use this package's logic to handle that first verification flow as well, override the `sendEmailVerificationNotification` method as shown below.

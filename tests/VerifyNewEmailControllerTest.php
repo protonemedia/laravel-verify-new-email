@@ -90,4 +90,21 @@ class VerifyNewEmailControllerTest extends TestCase
 
         $this->fail('Should have thrown InvalidVerificationLinkException');
     }
+
+    /** @test */
+    public function it_returns_json_response_when_request_expects_json()
+    {
+        Mail::fake();
+
+        $user = $this->user();
+
+        $pendingUserEmail = $user->newEmail('new@example.com');
+
+        request()->headers->set('Accept', 'application/json');
+
+        $response = app(VerifyNewEmailController::class)->verify($pendingUserEmail->token);
+
+        $this->assertInstanceOf(\Illuminate\Http\JsonResponse::class, $response);
+        $this->assertEquals(['verified' => true], $response->getData(true));
+    }
 }
