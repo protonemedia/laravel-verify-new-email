@@ -8,6 +8,7 @@ use Illuminate\Support\Testing\Fakes\MailFake;
 use ProtoneMedia\LaravelVerifyNewEmail\InvalidEmailVerificationModelException;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyFirstEmail;
 use ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail;
+use ProtoneMedia\LaravelVerifyNewEmail\Mail\NewEmailAddressRequested;
 use ProtoneMedia\LaravelVerifyNewEmail\PendingUserEmail;
 
 class MustVerifyNewEmailTest extends TestCase
@@ -179,5 +180,55 @@ class MustVerifyNewEmailTest extends TestCase
         $this->assertDatabaseMissing('pending_user_emails', [
             'email' => 'new@example.com',
         ]);
+    }
+
+    /** @test */
+    public function it_does_not_notify_old_email_by_default()
+    {
+        Mail::fake();
+
+        $user = $this->user();
+        $user->email_verified_at = now();
+        $user->save();
+
+        $user->newEmail('new@example.com');
+
+        Mail::assertNotQueued(NewEmailAddressRequested::class);
+    }
+
+    /** @test */
+    public function it_notifies_old_email_when_configured()
+    {
+        Mail::fake();
+
+        config(['verify-new-email.mailable_for_old_email' => NewEmailAddressRequested::class]);
+
+        $user = $this->user();
+        $user->email_verified_at = now();
+        $user->save();
+
+        $user->newEmail('new@example.com');
+
+        Mail::assertQueued(NewEmailAddressRequested::class, function (Mailable $mailable) {
+            $this->assertTrue($mailable->hasTo('old@example.com'));
+            $this->assertFalse($mailable->hasTo('new@example.com'));
+
+            return true;
+        });
+    }
+
+    /** @test */
+    public function it_does_not_notify_old_email_for_first_verification()
+    {
+        Mail::fake();
+
+        config(['verify-new-email.mailable_for_old_email' => NewEmailAddressRequested::class]);
+
+        $user = $this->user();
+
+        // User has no verified email yet — this is the first verification
+        $user->newEmail('old@example.com');
+
+        Mail::assertNotQueued(NewEmailAddressRequested::class);
     }
 }

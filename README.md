@@ -151,6 +151,24 @@ class User extends Authenticatable implements MustVerifyEmail
 }
 ```
 
+### Notify old email address
+
+When a user changes their email address, you can optionally send a notification to the *old* email address. This is a security measure — if someone gains unauthorized access and tries to change the email, the original owner gets alerted.
+
+This is disabled by default. To enable it, set the `mailable_for_old_email` config option:
+
+``` php
+<?php
+
+return [
+
+    'mailable_for_old_email' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\NewEmailAddressRequested::class,
+
+];
+```
+
+A default `NewEmailAddressRequested` mailable and blade template are included. You can publish and customize the view or use your own Mailable class. The notification is only sent when the user already has a verified email and the new email differs from the current one.
+
 The package has a controller to handle the activation of the new email address. You can specify a custom route in the config file which will be used to generate the verification URL. The token will be passed in as a parameter and the URL will be signed.
 
 ``` php

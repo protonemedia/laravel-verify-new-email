@@ -25,6 +25,7 @@ trait MustVerifyNewEmail
 
         return $this->createPendingUserEmailModel($email)->tap(function ($model) use ($withMailable) {
             $this->sendPendingEmailVerificationMail($model, $withMailable);
+            $this->sendOldEmailNotification($model);
         });
     }
 
@@ -99,6 +100,30 @@ trait MustVerifyNewEmail
         }
 
         return Mail::to($pendingUserEmail->email)->send($mailable);
+    }
+
+    /**
+     * Sends a notification to the old (current) email address when a new
+     * email address has been requested.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $pendingUserEmail
+     * @return mixed|void
+     */
+    public function sendOldEmailNotification(Model $pendingUserEmail)
+    {
+        $mailableClass = config('verify-new-email.mailable_for_old_email');
+
+        if (!$mailableClass) {
+            return;
+        }
+
+        $currentEmail = $this->getEmailForVerification();
+
+        if (!$currentEmail || $currentEmail === $pendingUserEmail->email) {
+            return;
+        }
+
+        return Mail::to($currentEmail)->send(new $mailableClass($pendingUserEmail));
     }
 
     /**
