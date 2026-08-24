@@ -5,7 +5,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://scrutinizer-ci.com/g/protonemedia/laravel-verify-new-email)
 [![Total Downloads](https://img.shields.io/packagist/dt/protonemedia/laravel-verify-new-email.svg?style=flat-square)](https://packagist.org/packages/protonemedia/laravel-verify-new-email)
 
-Laravel supports verifying email addresses out of the box. This package adds support for verifying *new* email addresses. When a user updates its email address, it won't replace the old one until the new one is verified. Super easy to set up, still fully customizable. If you want it can be used as a drop-in replacement for the built-in Email Verification features as this package supports unauthenticated verification and auto-login. Support for Laravel 9.0 and higher and requires PHP 8.2 or higher.
+Laravel supports verifying email addresses out of the box. This package adds support for verifying *new* email addresses. When a user updates its email address, it won't replace the old one until the new one is verified. Super easy to set up, still fully customizable. If you want it can be used as a drop-in replacement for the built-in Email Verification features as this package supports unauthenticated verification and auto-login. Support for Laravel 11.0 and higher and requires PHP 8.2 or higher.
 
 ## Sponsor Us
 
@@ -20,7 +20,7 @@ If you want to know more about the background of this package, please read [the 
 ## Requirements
 
 * PHP 8.2 or higher
-* Laravel 10 or higher
+* Laravel 11 or higher
 
 ## Installation
 
@@ -204,4 +204,3 @@ If you discover any security-related issues, please email pascal@protone.media i
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-

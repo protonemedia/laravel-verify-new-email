@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
+## Unreleased
+
+- Support for Laravel 13
+
 ## 1.6.0 - 2022-02-24
 
 - Interact with the Mailable before sending
