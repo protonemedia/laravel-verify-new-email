@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-verify-new-email` will be documented in this file
 
+## Unreleased
+
+- Use Eloquent morph aliases (`getMorphClass()`) when storing and querying `pending_user_emails.user_type`, so the package works with `Relation::enforceMorphMap()`
+
 ## 1.6.0 - 2022-02-24
 
 - Interact with the Mailable before sending

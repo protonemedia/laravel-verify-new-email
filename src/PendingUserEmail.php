@@ -42,7 +42,7 @@ class PendingUserEmail extends Model
     public function scopeForUser($query, Model $user)
     {
         $query->where([
-            $this->qualifyColumn('user_type') => get_class($user),
+            $this->qualifyColumn('user_type') => $user->getMorphClass(),
             $this->qualifyColumn('user_id')   => $user->getKey(),
         ]);
     }

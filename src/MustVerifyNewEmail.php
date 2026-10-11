@@ -50,7 +50,7 @@ trait MustVerifyNewEmail
         $this->clearPendingEmail();
 
         return $this->getEmailVerificationModel()->create([
-            'user_type' => get_class($this),
+            'user_type' => $this->getMorphClass(),
             'user_id'   => $this->getKey(),
             'email'     => $email,
             'token'     => Password::broker()->getRepository()->createNewToken(),
