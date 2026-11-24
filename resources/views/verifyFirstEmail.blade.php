@@ -1,14 +1,14 @@
 @component('mail::message')
-# Verify Email Address
+# {{ __('Verify Email Address') }}
 
-Please click the button below to verify your email address.
+{{ __('Please click the button below to verify your email address.') }}
 
 @component('mail::button', ['url' => $url])
-Verify Email Address
+{{ __('Verify Email Address') }}
 @endcomponent
 
-If you did not create an account, no further action is required.
+{{ __('If you did not create an account, no further action is required.') }}
 
-Thanks,<br>
+{{ __('Thanks') }},<br>
 {{ config('app.name') }}
 @endcomponent
