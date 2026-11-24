@@ -2,6 +2,7 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Testing\Fakes\MailFake;
@@ -80,7 +81,7 @@ class MustVerifyNewEmailTest extends TestCase
         $this->assertInstanceOf(PendingUserEmail::class, $pendingUserEmail);
         $this->assertEquals('old@example.com', $user->fresh()->email);
         $this->assertDatabaseHas('pending_user_emails', [
-            'user_type' => User::class,
+            'user_type' => $user->getMorphClass(),
             'user_id'   => $user->id,
             'email'     => 'new@example.com',
         ]);
@@ -179,5 +180,41 @@ class MustVerifyNewEmailTest extends TestCase
         $this->assertDatabaseMissing('pending_user_emails', [
             'email' => 'new@example.com',
         ]);
+    }
+
+    /** @test */
+    public function it_uses_the_morph_map_alias_when_storing_and_querying_pending_emails()
+    {
+        Mail::fake();
+
+        Relation::enforceMorphMap([
+            'user' => User::class,
+        ]);
+
+        try {
+            $user = $this->user();
+            $user->email_verified_at = now();
+            $user->save();
+
+            $pendingUserEmail = $user->newEmail('new@example.com');
+
+            $this->assertEquals('user', $pendingUserEmail->user_type);
+            $this->assertDatabaseHas('pending_user_emails', [
+                'user_type' => 'user',
+                'user_id'   => $user->id,
+                'email'     => 'new@example.com',
+            ]);
+            $this->assertTrue($pendingUserEmail->user->is($user));
+            $this->assertEquals('new@example.com', $user->getPendingEmail());
+
+            $user->clearPendingEmail();
+
+            $this->assertDatabaseMissing('pending_user_emails', [
+                'user_id' => $user->id,
+            ]);
+        } finally {
+            Relation::requireMorphMap(false);
+            Relation::morphMap([], false);
+        }
     }
 }
