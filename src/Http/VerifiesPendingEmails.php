@@ -32,6 +32,10 @@ trait VerifiesPendingEmails
 
     protected function authenticated()
     {
+        if (request()->expectsJson()) {
+            return response()->json(['verified' => true]);
+        }
+
         return redirect(config('verify-new-email.redirect_to'))->with('verified', true);
     }
 }
