@@ -38,4 +38,10 @@ return [
      * update its email address.
      */
     'mailable_for_new_email' => \ProtoneMedia\LaravelVerifyNewEmail\Mail\VerifyNewEmail::class,
+
+    /**
+     * The Mailable that will be sent to the old email address when the
+     * User requests a new email address. Set to null to disable.
+     */
+    'mailable_for_old_email' => null,
 ];
